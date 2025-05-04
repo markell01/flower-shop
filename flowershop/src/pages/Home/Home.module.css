@@ -1,0 +1,20 @@
+.main {
+  width: 100vw;
+  height: 100vh;
+  background: #F2D9BD;
+  display: flex;
+}
+
+.mainText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #be896a;
+  width: 50%;
+  margin-left: 20px;
+  font-size: 20px;
+}
+
+.cards {
+  width: 50%;
+}

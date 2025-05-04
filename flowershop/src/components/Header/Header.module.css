@@ -1,0 +1,21 @@
+.header {
+  background: #F0AE89;
+  height: 100px;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+}
+
+.iconGroup {
+  display: flex; 
+  margin: 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.userAndMag {
+  margin-left: 800px;
+  display: flex;
+  gap: 15px;
+}
