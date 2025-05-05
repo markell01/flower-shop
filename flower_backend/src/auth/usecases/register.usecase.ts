@@ -15,8 +15,9 @@ export class RegisterUsecase {
     if (await this.checkUser(username)) {
       throw new BadRequestException('User is already exists')
     }
+
     const hash = await this.hashPassword(password)
-    return await prisma.user.create({
+    const result = await prisma.user.create({
       data: {
         username,
         password: hash,
@@ -24,10 +25,13 @@ export class RegisterUsecase {
         lastname,
         role
       },
-      omit: {
-        password: true
-      }
     })
+
+    if (!result) {
+      return false;
+    }
+
+    return true;
   }
 
   async hashPassword(password: string) {
@@ -40,9 +44,7 @@ export class RegisterUsecase {
 
   async checkUser(username: string) {
     return await prisma.user.findUnique({
-      where: {
-        username
-      }
+      where: { username }
     })
   }
 }

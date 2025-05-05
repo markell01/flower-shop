@@ -7,3 +7,8 @@ export class RegisterDto {
     lastname: string
     role?: Role
 }
+
+export class LoginDto {
+    username: string
+    password: string
+}
