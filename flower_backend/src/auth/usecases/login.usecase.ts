@@ -6,9 +6,7 @@ import * as bcrypt from "bcrypt";
 export class LoginUsecase {
     async login(username: string, password: string) {
         const user = await prisma.user.findUnique({
-            where: {
-                username
-            }
+            where: { username },
         })
 
         if (!user) { throw new BadRequestException('No such user') }
@@ -16,6 +14,15 @@ export class LoginUsecase {
         const compare = await bcrypt.compare(password, user.password)
         if (!compare) { throw new BadRequestException('Wrong password') }
 
-        return 
+        const session = await prisma.session.create({
+            data: { user_id: user.id }
+        })
+
+        return {
+            username: user.username,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            session: session.id
+        };
     }
 }
