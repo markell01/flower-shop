@@ -1,10 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common'
-import bcrypt from 'bcrypt'
+import { BadRequestException, Injectable } from '@nestjs/common'
+import * as bcrypt from 'bcrypt'
+import { Role } from 'generated/prisma'
 import { prisma } from 'src/utils/prisma'
 
 @Injectable()
@@ -12,25 +8,41 @@ export class RegisterUsecase {
   async addUser(
     username: string,
     password: string,
-    name: string,
+    firstname: string,
     lastname: string,
-    role?: string
+    role?: Role
   ) {
-    const { salt, hash } = await this.hashPassword(password)
-    return await prisma.user.createFirst({
+    if (await this.checkUser(username)) {
+      throw new BadRequestException('User is already exists')
+    }
+    const hash = await this.hashPassword(password)
+    return await prisma.user.create({
       data: {
         username,
         password: hash,
-        name,
-        lastname
+        firstname,
+        lastname,
+        role
+      },
+      omit: {
+        password: true
       }
     })
   }
 
   async hashPassword(password: string) {
-    const saltRound = 1000
+    const saltRound = 10
     const salt: string = await bcrypt.genSalt(saltRound)
     const hash: string = await bcrypt.hash(password, salt)
-    return { salt, hash }
+    console.log('hash:', hash)
+    return hash
+  }
+
+  async checkUser(username: string) {
+    return await prisma.user.findUnique({
+      where: {
+        username
+      }
+    })
   }
 }

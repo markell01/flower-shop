@@ -1,0 +1,9 @@
+import { Role } from "generated/prisma"
+
+export class RegisterDto {
+    username: string
+    password: string
+    firstname: string
+    lastname: string
+    role?: Role
+}
