@@ -1,9 +1,10 @@
-import { Body, Controller, Post, Session } from '@nestjs/common';
-import { LoginDto, RegisterDto } from './usecases/dto/dto';
+import { Body, Controller, Post, Res, Session } from '@nestjs/common';
+import { LoginDto, LogoutDto, RegisterDto } from './usecases/dto/dto';
 import { RegisterUsecase } from './usecases/register.usecase';
 import { LoginUsecase } from './usecases/login.usecase';
 import session from 'express-session';
 import { LogoutUsecase } from './usecases/logout.usecase';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -35,11 +36,15 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Body() session_id: string, @Session() session: Record<string, any>) {
-    const result = await this.logoutUsecase.logout(session_id)
+  async logout(@Body() session_id: LogoutDto, @Session() session: Record<string, any>, @Res() res: Response) {
+    await this.logoutUsecase.logout(session_id.session)
 
-    session.destroy((err) => {
-      if (err) throw new Error('Ошибка!')
-    })
+    session.destroy(err => {
+      if (err) {
+        return res.status(500).json({ message: 'Ошибка при выходе' });
+      }
+      res.clearCookie('connect.sid', { path: '/' });
+      return res.json({ message: 'Успешный выход' });
+    });
   }
 }
