@@ -3,12 +3,14 @@ import { LoginDto, RegisterDto } from './usecases/dto/dto';
 import { RegisterUsecase } from './usecases/register.usecase';
 import { LoginUsecase } from './usecases/login.usecase';
 import session from 'express-session';
+import { LogoutUsecase } from './usecases/logout.usecase';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly registerUsecase: RegisterUsecase,
-    private readonly loginUsecase: LoginUsecase
+    private readonly loginUsecase: LoginUsecase,
+    private readonly logoutUsecase: LogoutUsecase
   ) {}
 
   @Post('register')
@@ -30,5 +32,14 @@ export class AuthController {
     session.session_id = user.session
 
     return user;
+  }
+
+  @Post('logout')
+  async logout(@Body() session_id: string, @Session() session: Record<string, any>) {
+    const result = await this.logoutUsecase.logout(session_id)
+
+    session.destroy((err) => {
+      if (err) throw new Error('Ошибка!')
+    })
   }
 }
