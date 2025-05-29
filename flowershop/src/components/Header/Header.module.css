@@ -4,6 +4,7 @@
   width: 100vw;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .iconGroup {
@@ -15,7 +16,12 @@
 }
 
 .userAndMag {
-  margin-left: 800px;
   display: flex;
   gap: 15px;
+  margin-right: 40px;
+}
+
+.group {
+  display: flex;
+  align-items: center;
 }
