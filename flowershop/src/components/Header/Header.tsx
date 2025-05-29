@@ -10,12 +10,14 @@ const Header = () => {
   return (
     <>
       <div className={`${style.header} montserrat-myfont`}>
-        <div className={style.iconGroup}>
-          <div className={style.icon}>
-            <IoFlowerOutline size={50} color={'white'}/>
+        <div className={style.group}>
+          <div className={style.iconGroup}>
+            <div className={style.icon}>
+              <IoFlowerOutline size={50} color={'white'}/>
+            </div>
           </div>
+          <Menulist />
         </div>
-        <Menulist />
         <div className={style.userAndMag}>
           <NavLink to={'user'}> <FaRegUserCircle color={'white'} size={30} /> </NavLink>
           <NavLink to={'shop'}> <FaCartShopping color={'white'} size={30} /> </NavLink>
